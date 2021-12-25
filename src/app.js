@@ -6,6 +6,7 @@ import {BoxLineGeometry} from "three/examples/jsm/geometries/BoxLineGeometry"
 class App {
   constructor() {
     const container = document.createElement('div')
+
     document.body.appendChild(container)
 
     // this.camera = new THREE.PerspectiveCamera(60,
@@ -38,8 +39,8 @@ class App {
     this.controls.target.set(0, 1.6, 0)
     this.controls.update()
 
-    this.initSceneCube()
-    // this.initScene()
+    // this.initSceneCube()
+    this.initScene()
     this.setupVR()
 
     this.renderer.setAnimationLoop(this.render.bind(this))
@@ -65,15 +66,38 @@ class App {
     this.scene.add( sphere )
 
     // sphere.position.set(1.5, 0, 0)
+
   }
 
   initScene(){
+    this.radius = 0.08
 
-  }
+    this.room = new THREE.LineSegments(
+        new BoxLineGeometry(6, 6, 6, 10, 10, 10, ),
+        new  THREE.LineBasicMaterial({color: 0x808080} )
+    )
+    this.room.geometry.translate(0, 3, 0,)
+    this.scene.add(this.room)
 
-  setupVR(){
+    const geometry = new THREE.IcosahedronGeometry(this.radius, 2)
 
-  }
+    for (let i = 0; i < 200; i ++ ) {
+
+      const object = new THREE.Mesh(geometry, new THREE.LineBasicMaterial({color: Math.random() * 0xffffff}))
+
+      object.position.x = this.random(-2, 2)
+      object.position.y = this.random(-2, 2)
+      object.position.z = this.random(-2, 2)
+
+      this.room.add( object )
+      }
+    }
+
+    setupVR() {
+      this.renderer.xr.enabled = true
+      document.body.appendChild(VRButton.createButton(this.renderer) )
+    }
+
 
   resize() {
     this.camera.aspect = window.innerWidth / window.innerHeight
@@ -91,3 +115,5 @@ class App {
 }
 
 export {App}
+// this.renderer.xr.enabled = true
+// document.body.appendChild(VRButton.createButton(this.renderer) )
